@@ -3,7 +3,7 @@ apex-guidestar
 
 Salesforce.com Apex integration with the Guidestar API - supports search, detail, and charity check for Guidestar's extensive database of US nonprofit organizations.
 
-Read all about the Guidestar API at ![data.guidstar.org](https://data.guidestar.org/). 
+Read all about the Guidestar API at [data.guidstar.org](https://data.guidestar.org/). 
 
 Usage:
 
@@ -27,7 +27,7 @@ Usage:
 
 
 You can install this package into a Salesforce instance using the following URL:
-  ![https://githubsfdeploy.herokuapp.com/?owner=SalesforceFoundation&repo=apex-guidestar](https://githubsfdeploy.herokuapp.com/?owner=SalesforceFoundation&repo=apex-guidestar)
+  [https://githubsfdeploy.herokuapp.com/?owner=SalesforceFoundation&repo=apex-guidestar](https://githubsfdeploy.herokuapp.com/?owner=SalesforceFoundation&repo=apex-guidestar)
 
 
 Comments and contributions are welcome!
