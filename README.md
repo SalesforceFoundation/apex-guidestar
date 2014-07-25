@@ -1,9 +1,9 @@
 apex-guidestar
 ==============
 
-Salesforce.com Apex integration with the Guidestar API - supports search, detail, and charity check for Guidestar's extensive database of US nonprofit organizations.
+Salesforce.com Apex integration with the [Guidestar API](https://data.guidestar.org/) - supports search, detail, and charity check for [Guidestar's extensive database](http://www.guidestar.org/) of US nonprofit organizations.
 
-Read all about the Guidestar API at [data.guidstar.org](https://data.guidestar.org/). 
+Read all about the Guidestar API at [data.guidestar.org](https://data.guidestar.org/). 
 
 Usage:
 
