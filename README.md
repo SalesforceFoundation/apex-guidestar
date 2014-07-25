@@ -26,7 +26,9 @@ Usage:
     Guidestar.CharityCheck cc = gs.charityCheck('94-3347800');
 
 
-You can install this package into a Salesforce instance using the following URL:
+The package includes a custom setting where you can store your API credentials. This way, you won't have to pass them in when you initialize the api class.
+
+You can install the package into a Salesforce instance using the following URL:
   [https://githubsfdeploy.herokuapp.com/?owner=SalesforceFoundation&repo=apex-guidestar](https://githubsfdeploy.herokuapp.com/?owner=SalesforceFoundation&repo=apex-guidestar)
 
 
