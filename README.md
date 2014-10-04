@@ -7,8 +7,14 @@ Read all about the Guidestar API at [data.guidestar.org](https://data.guidestar.
 
 Usage:
 
-	// initialize the api class
+	// initialize the api class using Guidestar API keys (Search, CharityCheck, and Detail API keys)
+    Guidestar gs = new Guidestar('123abcdefg123','123abcdefg123','123abcdefg123');    
+
+    // initialize the api class with Guidestar username and password
     Guidestar gs = new Guidestar('somebody@example.com','password');    
+
+    // initialize the api class using credentials stored in custom settings
+    Guidestar gs = new Guidestar();    
 
     // search for an org by name
     Guidestar.OrgSearch result = gs.orgSearch('Salesforce');
@@ -17,7 +23,7 @@ Usage:
     Guidestar.OrgSearch result = gs.orgSearch('94-3347800', 'ein');
 
     // search for an org by zip code, retrieving the first page of 25 results
-	Guidestar.OrgSearch('98101', 'zip', 1, 25 )
+    Guidestar.OrgSearch result = gs.orgSearch('98101', 'zip', 1, 25 );
 
     // retrieve full organization detail for a guidestar organization id (first get that id from search)
     Guidestar.OrgDetail detail = gs.orgDetail( 8424440 );

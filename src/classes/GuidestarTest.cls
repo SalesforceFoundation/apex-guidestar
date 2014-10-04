@@ -24,7 +24,7 @@ public class GuidestarTest {
     private static testmethod void testCharityCheckBadEin() {
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator()); 
         test.startTest();
-        Guidestar gs = new Guidestar();
+        Guidestar gs = new Guidestar('key1', 'key2', 'key3');
         Guidestar.GuidestarException gse;
         try {
             Guidestar.CharityCheck cc = gs.charityCheck('bogus123');

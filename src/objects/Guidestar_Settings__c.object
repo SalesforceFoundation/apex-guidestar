@@ -20,5 +20,26 @@
         <type>Text</type>
         <length>100</length>
     </fields>
+    <fields>
+        <fullName>Search_API_Key__c</fullName>
+        <externalId>false</externalId>
+        <label>Search API Key</label>
+        <type>Text</type>
+        <length>100</length>
+    </fields>
+    <fields>
+        <fullName>Charity_Check_API_Key__c</fullName>
+        <externalId>false</externalId>
+        <label>Charity Check API Key</label>
+        <type>Text</type>
+        <length>100</length>
+    </fields>
+    <fields>
+        <fullName>Detail_API_Key__c</fullName>
+        <externalId>false</externalId>
+        <label>Detail API Key</label>
+        <type>Text</type>
+        <length>100</length>
+    </fields>
     <label>Guidestar Settings</label>
 </CustomObject>
