@@ -11,7 +11,7 @@ public class GuidestarTest {
         Guidestar gs = new Guidestar('somebody@salesforce.com','password');
         Guidestar.CharityCheck cc = gs.charityCheck('94-3347800');
         system.debug(cc);
-        Datetime dmr = gs.convertDate(cc.most_recent_pub78);
+        Date dmr = gs.convertDate(cc.most_recent_pub78);
         Datetime dtmr = gs.convertDatetime(cc.most_recent_pub78);
         test.stopTest();
         System.assertNotEquals(null, cc.responseJson);
@@ -89,12 +89,16 @@ public class GuidestarTest {
         test.startTest();
         Guidestar gs = new Guidestar();
         Guidestar.OrgDetail detail = gs.orgDetail(8424440);
+        Date dmr = gs.convertDate(detail.organization_ntee_codes[0].ntee_code_details.lastmodified);
+        Datetime dtmr = gs.convertDatetime(detail.organization_ntee_codes[0].ntee_code_details.lastmodified);
         system.debug(detail);
         test.stopTest();
         System.assertEquals('Salesforce Com Foundation', detail.organization_name);
         System.assertEquals('B12', detail.organization_ntee_codes[0].nteecode);
+        System.assertEquals(9, dmr.month());
+        System.assertEquals(45, dtmr.minute());
     }   
-  
+    
     private static testmethod void classCoverage() {
         Guidestar.CharityCheck cc = new Guidestar.CharityCheck();
         Guidestar.OrgDetail detail = new Guidestar.OrgDetail();

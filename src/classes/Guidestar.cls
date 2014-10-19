@@ -3,15 +3,15 @@
  **
  ** Copyright (c) 2014 Salesforce.com Foundation
 **/
-global with sharing class Guidestar {
+global virtual with sharing class Guidestar {
 
-  Guidestar_Settings__c settings = Guidestar_Settings__c.getInstance();
-  private String baseEndpoint = 'https://data.guidestar.org/v1/';
-  private String userId;
-  private String password;
-  private String searchApiKey;
-  private String charityCheckApiKey;
-  private String detailApiKey;
+  protected Guidestar_Settings__c settings = Guidestar_Settings__c.getInstance();
+  protected String baseEndpoint = 'https://data.guidestar.org/v1/';
+  public String userId { protected get; set; }
+  public String password { protected get; set; }
+  public String searchApiKey { protected get; set; }
+  public String charityCheckApiKey { protected get; set; }
+  public String detailApiKey { protected get; set; }
 
   /** 
    ** Constructors - you can provide the auth credentials or look them up from custom settings
@@ -146,6 +146,15 @@ global with sharing class Guidestar {
     public String irs_subsection;
     public String msa;
     public String logo_url;
+    // the following properties are advanced search only:
+    public String irs_foundation_code;
+    public String national_hq;
+    public String website;
+    public String parents;
+    public String bmf;
+    public String pub78;
+    public String revocation;
+    public String organization_name_aka;
   }
 
   global class OrgDetail {
@@ -257,30 +266,32 @@ global with sharing class Guidestar {
    ** Methods for Search API
    **
    ** query is the string to search for
-   ** searchBy param can be one of keyword, name, ein, or zip (defaults to keyword)
+   ** searchBy param can be one of keyword, name, ein, nteecode, city, state, or zip (or leave blank)
    ** page allows you to retrieve additional results if there are more than the page size
    ** resultsPerPage can be 1 to 25, but defaults to 10
   **/
-  public OrgSearch orgSearch( String query, String searchBy, Integer page, Integer resultsPerPage ) {
+  public OrgSearch orgSearch( String query, String searchBy, Integer page, Integer resultsPerPage, Boolean useAdvancedSearch ) {
     OrgSearch os;
-    String endpoint = baseEndpoint + 'search.json?q=';
+    String endpoint = baseEndpoint + (useAdvancedSearch ? 'advancedsearch' : 'search') + '.json?q=';
 
-    if (searchBy == 'name') {     
-      endpoint += 'organization_name:' + EncodingUtil.urlEncode('"' + query + '"', 'UTF-8');
+    String qs;
+    if (searchBy == 'name') {
+      qs = 'organization_name:"' + query + '"';
       if (query.contains('.')) {
-        endpoint += '%20OR%20organization_name:' + EncodingUtil.urlEncode('"' + query.replace('.', ' ') + '"', 'UTF-8');
-      }     
+        qs += ' OR organization_name:"' + query.replace('.', ' ') + '"';
+      }
     } else if (searchBy == 'ein') {
-      endpoint += 'ein:' + cleanEin(query);
-    } else if (searchBy == 'zip') {
-      endpoint += 'zip:' + query;
+      qs = 'ein:' + cleanEin(query);
+    } else if (searchBy != null) {
+      qs = searchBy + ':"' + query + '"';
     } else {
-      endpoint += EncodingUtil.urlEncode(query, 'UTF-8');
+      qs = query;
     }
-    endpoint = endpoint.replace('+','%20');
 
+    endpoint += (EncodingUtil.urlEncode(qs, 'UTF-8')).replace('+','%20');
     if (page != null) endpoint += '&p=' + String.valueOf(page);
     if (resultsPerPage != null) endpoint += '&r=' + String.valueOf(resultsPerPage);
+
     String js = callGuidestar( endpoint, searchApiKey );
     if (js != null) {
       os = ((OrgSearch)(JSON.deserialize(js, OrgSearch.class)));
@@ -288,13 +299,17 @@ global with sharing class Guidestar {
     }
     return os;
   }
+  // default to regular search
+  public OrgSearch orgSearch( String query, String searchBy, Integer page, Integer resultsPerPage ) {
+      return orgSearch( query, searchBy, page, resultsPerPage, false );
+  }
   // method that returns the first page of up to 10 results
   public OrgSearch orgSearch( String query, String searchBy ) {
-    return orgSearch( query, searchBy, null, null );
+    return orgSearch( query, searchBy, null, null, false );
   }
   // default method that searches by org name and returns the first page of up to 10 results
   public OrgSearch orgSearch( String query ) {
-    return orgSearch( query, 'name', null, null );  
+    return orgSearch( query, 'name', null, null, false );  
   }
 
   /** 
@@ -312,28 +327,38 @@ global with sharing class Guidestar {
   }
 
   /** 
-   ** Utility methods for dates
+   ** Utility methods for dates - converts either type of date returned by Guidestar
   **/
   public Datetime convertDateTime( String ds ) {
     if (ds == null || ds == '') return null;
-    list<String> dp = ds.split(' ');
-    list<String> dc = dp[0].split('/');
-    list<String> tc = dp[1].split(':');
-    if (dp[2] == 'PM') tc[0] += 12;
-    return Datetime.newInstance( Integer.valueOf(dc[2]), Integer.valueOf(dc[0]), Integer.valueOf(dc[1]), 
-                      Integer.valueOf(tc[0]), Integer.valueOf(tc[1]), Integer.valueOf(tc[2]) );
+    if (ds.startsWith('/Date(')) {
+      String ms = ds.substringBetween('(', '-').substringBefore(')');
+      return Datetime.newInstance( Long.valueOf(ms) );
+    } else {
+      list<String> dp = ds.split(' ');
+      list<String> dc = dp[0].split('/');
+      list<String> tc = dp[1].split(':');
+      if (dp[2] == 'PM') tc[0] += 12;
+      return Datetime.newInstanceGmt( Integer.valueOf(dc[2]), Integer.valueOf(dc[0]), Integer.valueOf(dc[1]), 
+                        Integer.valueOf(tc[0]), Integer.valueOf(tc[1]), Integer.valueOf(tc[2]) );
+    }
   }
   public Date convertDate( String ds ) {
     if (ds == null || ds == '') return null;
-    list<String> dp = ds.split(' ');
-    list<String> dc = dp[0].split('/');
-    return Date.newInstance( Integer.valueOf(dc[2]), Integer.valueOf(dc[0]), Integer.valueOf(dc[1]) );
+    if (ds.startsWith('/Date(')) {
+      String ms = ds.substringBetween('(', '-').substringBefore(')');
+      return Datetime.newInstance( Long.valueOf(ms) ).date();
+    } else {  
+      list<String> dp = ds.split(' ');
+      list<String> dc = dp[0].split('/');
+      return Date.newInstance( Integer.valueOf(dc[2]), Integer.valueOf(dc[0]), Integer.valueOf(dc[1]) );
+    }
   }
 
   /** 
    ** Shared methods
   **/
-  private String cleanEin(String ein) {
+  protected String cleanEin(String ein) {
     if (ein == null) throw new GuidestarException('EIN cannot be null.');
     ein = ein.replace('-', '').replace(' ', '');
     if (ein.length() != 9) throw new GuidestarException('EIN must consist of 9 numbers (e.g. 94-3347800).');
@@ -341,7 +366,7 @@ global with sharing class Guidestar {
     return (ein.left(2) + '-' + ein.right(7));
   }
 
-  private String callGuidestar( String endpoint, String apiKey ) {
+  protected String callGuidestar( String endpoint, String apiKey ) {
 
     // if an API key is provided, send that - otherwise username and password
     String authString = (apiKey != null) ? (apiKey + ':') : (userId + ':' + password);
