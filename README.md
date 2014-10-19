@@ -37,7 +37,8 @@ Usage:
     // get an organization id and then retrieve full Exchange API data
     GuidestarExchange gsex = new GuidestarExchange();
     Guidestar.OrgSearch result = gsex.orgSearch('94-3347800', 'ein');
-    GuidestarExchange.OrgExchange exchange = gsex.orgExchange( result.hits[0].organization_id );
+    Integer guidestarOrgId = result.hits[0].organization_id;
+    GuidestarExchange.OrgExchange exchange = gsex.orgExchange( guidestarOrgId );
 
 The package includes a custom setting where you can store your API credentials. This way, you won't have to pass them in when you initialize the api class. For better security, use API keys rather than username and password.
 
