@@ -4,6 +4,15 @@
     <customSettingsVisibility>Protected</customSettingsVisibility>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>API_Password__c</fullName>
+        <externalId>false</externalId>
+        <label>API Password</label>
+        <length>100</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>API_User_Id__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Guidestar API User ID, generally in the form of an email address</inlineHelpText>
@@ -14,32 +23,40 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>API_Password__c</fullName>
-        <externalId>false</externalId>
-        <label>API Password</label>
-        <type>Text</type>
-        <length>100</length>
-    </fields>
-    <fields>
-        <fullName>Search_API_Key__c</fullName>
-        <externalId>false</externalId>
-        <label>Search API Key</label>
-        <type>Text</type>
-        <length>100</length>
-    </fields>
-    <fields>
         <fullName>Charity_Check_API_Key__c</fullName>
         <externalId>false</externalId>
         <label>Charity Check API Key</label>
-        <type>Text</type>
         <length>100</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Detail_API_Key__c</fullName>
         <externalId>false</externalId>
         <label>Detail API Key</label>
-        <type>Text</type>
         <length>100</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Exchange_API_Key__c</fullName>
+        <externalId>false</externalId>
+        <label>Exchange API Key</label>
+        <length>100</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Search_API_Key__c</fullName>
+        <externalId>false</externalId>
+        <label>Search API Key</label>
+        <length>100</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <label>Guidestar Settings</label>
 </CustomObject>
